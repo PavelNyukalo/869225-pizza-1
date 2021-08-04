@@ -57,7 +57,7 @@
                   <input
                     type="radio"
                     name="diameter"
-                    value="small"
+                    :value="type"
                     class="visually-hidden"
                   />
                   <span>{{ name }}</span>
@@ -197,6 +197,12 @@ export default {
       sizes: pizza.sizes.map((size) => normalizeData(size, SIZES_TYPES)),
       user,
     };
+  },
+
+  mounted() {
+    this.$el.querySelector('input[value="light"]').checked = true;
+    this.$el.querySelector('input[value="normal"]').checked = true;
+    this.$el.querySelector('input[value="tomato"]').checked = true;
   },
 };
 </script>
