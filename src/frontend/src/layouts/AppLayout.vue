@@ -6,7 +6,7 @@
       </a>
     </div>
     <div class="header__cart">
-      <a href="cart.html">0 ₽</a>
+      <a href="cart.html">{{ priceBasket }} ₽</a>
     </div>
     <div class="header__user">
       <a href="#" class="header__login"><span>Войти</span></a>
@@ -20,6 +20,11 @@ import LogoIcon from "@/assets/img/logo.svg";
 
 export default {
   name: "AppLayout",
+
+  props: {
+    priceBasket: Number,
+  },
+
   data() {
     return {
       LogoIcon,

@@ -20,11 +20,13 @@
 
       <ul class="ingredients__list">
         <BuilderIngredientsItem
-          v-for="{ id, name, type } in ingredients"
+          v-for="{ id, name, type, count } in ingredients"
           :key="id"
           :name="name"
           :typeIng="type"
+          :count="count"
           @addIngType="addIngType"
+          @removeIngType="removeIngType"
         />
       </ul>
     </div>
@@ -52,15 +54,26 @@ export default {
     const checkedElem = this.$el.querySelector('input[value="tomato"]');
     checkedElem.checked = true;
 
-    this.$emit("setSauce", checkedElem.value);
+    this.$emit("setSauce", {
+      value: checkedElem.value,
+      price: this.sauces.find((item) => item.type === checkedElem.value).price,
+    });
   },
 
   methods: {
     setSauce(value) {
-      this.$emit("setSauce", value);
+      this.$emit("setSauce", {
+        value: value,
+        price: this.sauces.find((item) => item.type === value).price,
+      });
     },
+
     addIngType(value) {
-      this.$emit("globalAddIngType", value);
+      this.$emit("addIngType", value);
+    },
+
+    removeIngType(value) {
+      this.$emit("removeIngType", value);
     },
   },
 };

@@ -97,3 +97,10 @@ export const INGREDIENTS_TYPES = [
     value: "blue_cheese",
   },
 ];
+
+export const COUNT_INGREDIENT = {
+  Empty: 0,
+  Min: 1,
+  Two: 2,
+  Max: 3,
+};

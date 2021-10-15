@@ -32,12 +32,18 @@ export default {
     const checkedElem = this.$el.querySelector('input[value="light"]');
     checkedElem.checked = true;
 
-    this.$emit("setDough", checkedElem.value);
+    this.$emit("setDough", {
+      value: checkedElem.value,
+      price: this.dough.find((item) => item.type === checkedElem.value).price,
+    });
   },
 
   methods: {
     setDough(value) {
-      this.$emit("setDough", value);
+      this.$emit("setDough", {
+        value: value,
+        price: this.dough.find((item) => item.type === value).price,
+      });
     },
   },
 };

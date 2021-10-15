@@ -4,3 +4,10 @@ export const normalizeData = (item, types) => {
     type: types.find(({ label }) => item.name === label)?.value,
   };
 };
+
+export const addCountIngredients = (item) => {
+  return {
+    ...item,
+    count: 0,
+  };
+};

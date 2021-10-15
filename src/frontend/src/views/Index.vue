@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppLayout />
+    <AppLayout :priceBasket="priceBasket" />
     <main class="content">
       <form action="#" method="post">
         <div class="content__wrapper">
@@ -22,7 +22,11 @@
             <div class="sheet">
               <h2 class="title title--small sheet__title">Выберите размер</h2>
 
-              <BuilderSizeSelector class="sheet__content" :sizes="sizes" />
+              <BuilderSizeSelector
+                class="sheet__content"
+                :sizes="sizes"
+                @setSize="setSize"
+              />
             </div>
           </div>
 
@@ -37,7 +41,8 @@
                 :sauces="sauces"
                 :ingredients="ingredients"
                 @setSauce="setSauce"
-                @globalAddIngType="globalAddIngType"
+                @addIngType="addIngType"
+                @removeIngType="removeIngType"
               />
             </div>
           </div>
@@ -46,19 +51,26 @@
             <label class="input">
               <span class="visually-hidden">Название пиццы</span>
               <input
+                v-model="pizzaName"
                 type="text"
                 name="pizza_name"
                 placeholder="Введите название пиццы"
                 required
+                autocomplete="off"
               />
             </label>
 
             <BuilderPizzaView
-              :pizzaClassesIng="pizzaClassesIng"
               :pizzaFoundation="pizzaFoundation"
+              :ingredients="ingredients"
+              @changeIngredientsDrop="changeIngredientsDrop"
             />
 
-            <BuilderPriceCounter />
+            <BuilderPriceCounter
+              :finalPrice="finalPrice"
+              :pizzaObjectInBasket="pizzaObjectInBasket"
+              @addPizzaInBasket="addPizzaInBasket"
+            />
           </div>
         </div>
       </form>
@@ -75,7 +87,7 @@ import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView.vue"
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter.vue";
 
 /** Вспомогательные функции */
-import { normalizeData } from "@/common/helpers.js";
+import { normalizeData, addCountIngredients } from "@/common/helpers.js";
 
 /** Типы для нормализации */
 import {
@@ -111,36 +123,90 @@ export default {
     return {
       misc,
       dough: pizza.dough.map((dough) => normalizeData(dough, DOUGH_TYPES)),
-      ingredients: pizza.ingredients.map((ingredient) =>
-        normalizeData(ingredient, INGREDIENTS_TYPES)
-      ),
+      ingredients: pizza.ingredients.map((ingredient) => {
+        return normalizeData(
+          addCountIngredients(ingredient),
+          INGREDIENTS_TYPES
+        );
+      }),
       sauces: pizza.sauces.map((sauce) => normalizeData(sauce, SAUCES_TYPES)),
       sizes: pizza.sizes.map((size) => normalizeData(size, SIZES_TYPES)),
       user,
 
-      pizzaDough: "",
-      pizzaSauce: "",
-      pizzaClassesIng: [],
+      pizzaDough: {},
+      pizzaSauce: {},
+      pizzaSize: {},
+      pizzaName: "",
+
+      priceBasket: 0,
     };
   },
 
   computed: {
     pizzaFoundation() {
-      return `pizza--foundation--${this.pizzaDough}-${this.pizzaSauce}`;
+      return `pizza--foundation--${this.pizzaDough.value}-${this.pizzaSauce.value}`;
+    },
+
+    pizzaObjectInBasket() {
+      return {
+        dough: this.pizzaDough,
+        sauce: this.pizzaSauce,
+        ingredients: this.ingredients.filter(
+          (ingredient) => ingredient.count > 0
+        ),
+        size: this.pizzaSize,
+        name: this.pizzaName,
+      };
+    },
+
+    finalPrice() {
+      const sizesMultiplier = this.pizzaObjectInBasket.size.multiplier;
+      const doughPrice = this.pizzaObjectInBasket.dough.price;
+      const saucePrice = this.pizzaObjectInBasket.sauce.price;
+      const ingredientsPrice = this.pizzaObjectInBasket.ingredients?.reduce(
+        (sum, current) => sum + current.count * current.price,
+        0
+      );
+
+      return sizesMultiplier * (doughPrice + saucePrice + ingredientsPrice);
     },
   },
 
   methods: {
     setDough(value) {
-      this.pizzaDough = Dough[value];
+      this.pizzaDough = value;
+      this.pizzaDough.value = Dough[value.value];
     },
 
     setSauce(value) {
       this.pizzaSauce = value;
     },
 
-    globalAddIngType(value) {
-      this.pizzaClassesIng.push(value);
+    setSize(value) {
+      this.pizzaSize = value;
+    },
+
+    addIngType(type) {
+      this.ingredients.find((item) => item.type === type).count++;
+    },
+
+    removeIngType(type) {
+      this.ingredients.find((item) => item.type === type).count--;
+    },
+
+    changeIngredientsDrop(transferData) {
+      this.addIngType(transferData.type);
+    },
+
+    addPizzaInBasket() {
+      this.priceBasket += this.finalPrice;
+
+      this.resetSelect();
+    },
+
+    resetSelect() {
+      this.pizzaName = "";
+      this.ingredients.forEach((item) => (item.count = 0));
     },
   },
 };

@@ -1,46 +1,60 @@
 <template>
   <li class="ingredients__item">
-    <span class="filling" :class="`${type}`">
-      {{ name }}
-    </span>
+    <AppDrag :transferData="transferData" :draggable="draggable">
+      <span class="filling" :class="`${type}`">
+        {{ name }}
+      </span>
+    </AppDrag>
 
-    <ItemCounter @addCount="addIng" />
+    <ItemCounter v-model="count" @addCount="addIng" @removeCount="removeIng" />
   </li>
 </template>
 
 <script>
+import AppDrag from "@/common/components/AppDrag";
 import ItemCounter from "@/common/components/ItemCounter";
 
 export default {
   name: "BuilderIngredientsItem",
 
   components: {
+    AppDrag,
     ItemCounter,
   },
 
   props: {
     typeIng: String,
+    count: Number,
     name: String,
-  },
-
-  data() {
-    return {
-      count: 0,
-    };
   },
 
   computed: {
     type() {
       return `filling--${this.$props.typeIng}`;
     },
+
+    transferData() {
+      return {
+        count: this.count,
+        type: this.typeIng,
+      };
+    },
+
+    draggable() {
+      return this.count !== 3;
+    },
   },
 
   methods: {
-    addIng(value) {
-      // TODO: Продумать добавление и удаление
-      if (value !== 3) {
-        this.count = value;
-        this.$emit("addIngType", this.type);
+    addIng() {
+      if (this.count <= 3) {
+        this.$emit("addIngType", this.$props.typeIng);
+      }
+    },
+
+    removeIng() {
+      if (this.count >= 0) {
+        this.$emit("removeIngType", this.$props.typeIng);
       }
     },
   },

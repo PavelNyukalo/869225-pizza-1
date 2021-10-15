@@ -6,6 +6,7 @@
       :type="type"
       className="diameter__input"
       inputName="diameter"
+      @changeInput="setSize"
     >
       <span>{{ name }}</span>
     </RadioButton>
@@ -27,7 +28,23 @@ export default {
   },
 
   mounted() {
-    this.$el.querySelector('input[value="normal"]').checked = true;
+    const checkedElem = this.$el.querySelector('input[value="normal"]');
+    checkedElem.checked = true;
+
+    this.$emit("setSize", {
+      value: checkedElem.value,
+      multiplier: this.sizes.find((item) => item.type === checkedElem.value)
+        .multiplier,
+    });
+  },
+
+  methods: {
+    setSize(value) {
+      this.$emit("setSize", {
+        value: value,
+        multiplier: this.sizes.find((item) => item.type === value).multiplier,
+      });
+    },
   },
 };
 </script>
