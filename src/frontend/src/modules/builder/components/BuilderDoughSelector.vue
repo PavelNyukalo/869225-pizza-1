@@ -1,9 +1,10 @@
 <template>
   <div class="dough">
     <RadioButton
-      v-for="{ id, name, description, type } in dough"
+      v-for="{ id, name, description, type, defaultChecked } in dough"
       :key="id"
       :type="type"
+      :checked="defaultChecked"
       className="dough__input"
       inputName="dough"
       @changeInput="setDough"
@@ -25,17 +26,10 @@ export default {
   },
 
   props: {
-    dough: Array,
-  },
-
-  mounted() {
-    const checkedElem = this.$el.querySelector('input[value="light"]');
-    checkedElem.checked = true;
-
-    this.$emit("setDough", {
-      value: checkedElem.value,
-      price: this.dough.find((item) => item.type === checkedElem.value).price,
-    });
+    dough: {
+      type: Array,
+      required: true,
+    },
   },
 
   methods: {

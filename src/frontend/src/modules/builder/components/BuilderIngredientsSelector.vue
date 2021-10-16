@@ -4,10 +4,12 @@
       <p>Основной соус:</p>
 
       <RadioButton
-        v-for="{ id, name, type } in sauces"
+        v-for="{ id, name, type, defaultChecked } in sauces"
         :key="id"
         :type="type"
-        class="radio ingredients__input"
+        :checked="defaultChecked"
+        class="radio"
+        className="ingredients__input"
         inputName="sauce"
         @changeInput="setSauce"
       >
@@ -46,18 +48,15 @@ export default {
   },
 
   props: {
-    sauces: Array,
-    ingredients: Array,
-  },
+    sauces: {
+      type: Array,
+      required: true,
+    },
 
-  mounted() {
-    const checkedElem = this.$el.querySelector('input[value="tomato"]');
-    checkedElem.checked = true;
-
-    this.$emit("setSauce", {
-      value: checkedElem.value,
-      price: this.sauces.find((item) => item.type === checkedElem.value).price,
-    });
+    ingredients: {
+      type: Array,
+      required: true,
+    },
   },
 
   methods: {

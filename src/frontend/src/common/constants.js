@@ -104,3 +104,9 @@ export const COUNT_INGREDIENT = {
   Two: 2,
   Max: 3,
 };
+
+export const DEFAULT_CHECKED_TYPE = {
+  Dough: "light",
+  Size: "normal",
+  Sauce: "tomato",
+};

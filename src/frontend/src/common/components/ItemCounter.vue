@@ -33,7 +33,10 @@ export default {
   name: "ItemCounter",
 
   props: {
-    count: Number,
+    count: {
+      type: Number,
+      default: COUNT_INGREDIENT.Empty,
+    },
   },
 
   model: {

@@ -2,7 +2,20 @@
   <div class="content__constructor">
     <AppDrop @drop="addDrop">
       <div :class="`pizza ${pizzaFoundation}`">
-        <div class="pizza__wrapper"></div>
+        <div class="pizza__wrapper">
+          <div
+            v-for="{ id, count, type } in ingredientsClasses"
+            :key="id"
+            :class="[
+              'pizza__filling',
+              `pizza__filling--${type}`,
+              {
+                'pizza__filling--second': count === COUNT_INGREDIENT.Two,
+                'pizza__filling--third': count === COUNT_INGREDIENT.Max,
+              },
+            ]"
+          ></div>
+        </div>
       </div>
     </AppDrop>
   </div>
@@ -20,66 +33,40 @@ export default {
   },
 
   props: {
-    pizzaFoundation: String,
-    ingredients: Array,
-  },
+    pizzaDough: {
+      type: String,
+      required: true,
+    },
 
-  mounted() {
-    this.addIngredientView();
-  },
+    pizzaSauce: {
+      type: String,
+      required: true,
+    },
 
-  watch: {
     ingredients: {
-      deep: true,
-      handler() {
-        this.addIngredientView();
-      },
+      type: Array,
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      COUNT_INGREDIENT,
+    };
+  },
+
+  computed: {
+    ingredientsClasses() {
+      return this.ingredients.filter((ingredient) => ingredient.count > 0);
+    },
+    pizzaFoundation() {
+      return `pizza--foundation--${this.$props.pizzaDough}-${this.$props.pizzaSauce}`;
     },
   },
 
   methods: {
     addDrop(transferData) {
       this.$emit("changeIngredientsDrop", transferData);
-    },
-
-    addIngredientView() {
-      const pizzaWrapper = this.$el.querySelector(".pizza__wrapper");
-      const ingredientsFragment = document.createDocumentFragment();
-
-      pizzaWrapper.innerHTML = "";
-
-      this.ingredients.forEach(({ count, type }) => {
-        if (count === COUNT_INGREDIENT.Empty) return;
-
-        const newIngDiv = document.createElement("div");
-        switch (count) {
-          case COUNT_INGREDIENT.Min:
-            newIngDiv.classList.add(
-              "pizza__filling",
-              `pizza__filling--${type}`
-            );
-            break;
-
-          case COUNT_INGREDIENT.Two:
-            newIngDiv.classList.add(
-              "pizza__filling",
-              `pizza__filling--${type}`,
-              "pizza__filling--second"
-            );
-            break;
-
-          case COUNT_INGREDIENT.Max:
-            newIngDiv.classList.add(
-              "pizza__filling",
-              `pizza__filling--${type}`,
-              "pizza__filling--third"
-            );
-            break;
-        }
-        ingredientsFragment.appendChild(newIngDiv);
-      });
-
-      pizzaWrapper.appendChild(ingredientsFragment);
     },
   },
 };

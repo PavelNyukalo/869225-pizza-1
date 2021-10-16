@@ -1,10 +1,11 @@
 <template>
   <label :class="`${className} ${className}--${type}`">
     <input
+      class="visually-hidden"
       type="radio"
       :name="inputName"
-      class="visually-hidden"
       :value="type"
+      :checked="checked"
       @input="$emit('changeInput', $event.target.value)"
     />
     <slot></slot>
@@ -16,11 +17,25 @@ export default {
   name: "RadioButton",
 
   props: {
-    className: String,
+    className: {
+      type: String,
+      required: true,
+    },
 
-    inputName: String,
+    inputName: {
+      type: String,
+      required: true,
+    },
 
-    type: String,
+    type: {
+      type: String,
+      required: true,
+    },
+
+    checked: {
+      type: Boolean,
+      required: true,
+    },
   },
 };
 </script>

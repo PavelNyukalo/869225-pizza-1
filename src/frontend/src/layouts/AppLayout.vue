@@ -22,7 +22,10 @@ export default {
   name: "AppLayout",
 
   props: {
-    priceBasket: Number,
+    priceBasket: {
+      type: Number,
+      required: true,
+    },
   },
 
   data() {

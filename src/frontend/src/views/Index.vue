@@ -61,7 +61,8 @@
             </label>
 
             <BuilderPizzaView
-              :pizzaFoundation="pizzaFoundation"
+              :pizzaDough="pizzaDough.value"
+              :pizzaSauce="pizzaSauce.value"
               :ingredients="ingredients"
               @changeIngredientsDrop="changeIngredientsDrop"
             />
@@ -87,7 +88,11 @@ import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView.vue"
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter.vue";
 
 /** Вспомогательные функции */
-import { normalizeData, addCountIngredients } from "@/common/helpers.js";
+import {
+  normalizeData,
+  addCountIngredients,
+  addDefaultChecked,
+} from "@/common/helpers.js";
 
 /** Типы для нормализации */
 import {
@@ -95,6 +100,7 @@ import {
   SIZES_TYPES,
   SAUCES_TYPES,
   INGREDIENTS_TYPES,
+  DEFAULT_CHECKED_TYPE,
 } from "@/common/constants.js";
 
 /** Моки-данные */
@@ -105,6 +111,45 @@ import user from "@/static/user.json";
 const Dough = {
   light: "small",
   large: "big",
+};
+
+const pizzaDough = pizza.dough
+  .map((dough) => normalizeData(dough, DOUGH_TYPES))
+  .map((dough) => addDefaultChecked(dough, DEFAULT_CHECKED_TYPE.Dough));
+
+const pizzaIngredients = pizza.ingredients
+  .map((ingredient) => normalizeData(ingredient, INGREDIENTS_TYPES))
+  .map((ingredient) => addCountIngredients(ingredient));
+
+const pizzaSauces = pizza.sauces
+  .map((sauce) => normalizeData(sauce, SAUCES_TYPES))
+  .map((sauce) => addDefaultChecked(sauce, DEFAULT_CHECKED_TYPE.Sauce));
+
+const pizzaSizes = pizza.sizes
+  .map((size) => normalizeData(size, SIZES_TYPES))
+  .map((size) => addDefaultChecked(size, DEFAULT_CHECKED_TYPE.Size));
+
+const pizzaDoughDefault = {
+  value:
+    Dough[
+      pizzaDough.find((item) => item.type === DEFAULT_CHECKED_TYPE.Dough).type
+    ],
+  price: pizzaDough.find((item) => item.type === DEFAULT_CHECKED_TYPE.Dough)
+    .price,
+};
+
+const pizzaSauceDefault = {
+  value: pizzaSauces.find((item) => item.type === DEFAULT_CHECKED_TYPE.Sauce)
+    .type,
+  price: pizzaSauces.find((item) => item.type === DEFAULT_CHECKED_TYPE.Sauce)
+    .price,
+};
+
+const pizzaSizeDefault = {
+  value: pizzaSizes.find((item) => item.type === DEFAULT_CHECKED_TYPE.Size)
+    .type,
+  multiplier: pizzaSizes.find((item) => item.type === DEFAULT_CHECKED_TYPE.Size)
+    .multiplier,
 };
 
 export default {
@@ -122,20 +167,15 @@ export default {
   data() {
     return {
       misc,
-      dough: pizza.dough.map((dough) => normalizeData(dough, DOUGH_TYPES)),
-      ingredients: pizza.ingredients.map((ingredient) => {
-        return normalizeData(
-          addCountIngredients(ingredient),
-          INGREDIENTS_TYPES
-        );
-      }),
-      sauces: pizza.sauces.map((sauce) => normalizeData(sauce, SAUCES_TYPES)),
-      sizes: pizza.sizes.map((size) => normalizeData(size, SIZES_TYPES)),
+      dough: pizzaDough,
+      ingredients: pizzaIngredients,
+      sauces: pizzaSauces,
+      sizes: pizzaSizes,
       user,
 
-      pizzaDough: {},
-      pizzaSauce: {},
-      pizzaSize: {},
+      pizzaDough: pizzaDoughDefault,
+      pizzaSauce: pizzaSauceDefault,
+      pizzaSize: pizzaSizeDefault,
       pizzaName: "",
 
       priceBasket: 0,
@@ -143,10 +183,6 @@ export default {
   },
 
   computed: {
-    pizzaFoundation() {
-      return `pizza--foundation--${this.pizzaDough.value}-${this.pizzaSauce.value}`;
-    },
-
     pizzaObjectInBasket() {
       return {
         dough: this.pizzaDough,
@@ -173,17 +209,17 @@ export default {
   },
 
   methods: {
-    setDough(value) {
-      this.pizzaDough = value;
-      this.pizzaDough.value = Dough[value.value];
+    setDough(newValue) {
+      this.pizzaDough = newValue;
+      this.pizzaDough.value = Dough[newValue.value];
     },
 
-    setSauce(value) {
-      this.pizzaSauce = value;
+    setSauce(newValue) {
+      this.pizzaSauce = newValue;
     },
 
-    setSize(value) {
-      this.pizzaSize = value;
+    setSize(newValue) {
+      this.pizzaSize = newValue;
     },
 
     addIngType(type) {

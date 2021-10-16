@@ -17,8 +17,15 @@ export default {
   name: "BuilderPriceCounter",
 
   props: {
-    finalPrice: Number,
-    pizzaObjectInBasket: Object,
+    finalPrice: {
+      type: Number,
+      required: true,
+    },
+
+    pizzaObjectInBasket: {
+      type: Object,
+      required: true,
+    },
   },
 
   computed: {

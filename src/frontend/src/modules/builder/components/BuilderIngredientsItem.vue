@@ -23,9 +23,20 @@ export default {
   },
 
   props: {
-    typeIng: String,
-    count: Number,
-    name: String,
+    typeIng: {
+      type: String,
+      required: true,
+    },
+
+    count: {
+      type: Number,
+      required: true,
+    },
+
+    name: {
+      type: String,
+      required: true,
+    },
   },
 
   computed: {

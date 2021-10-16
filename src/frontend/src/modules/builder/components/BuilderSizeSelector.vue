@@ -1,9 +1,10 @@
 <template>
   <div class="diameter">
     <RadioButton
-      v-for="{ id, name, type } in sizes"
+      v-for="{ id, name, type, defaultChecked } in sizes"
       :key="id"
       :type="type"
+      :checked="defaultChecked"
       className="diameter__input"
       inputName="diameter"
       @changeInput="setSize"
@@ -24,18 +25,10 @@ export default {
   },
 
   props: {
-    sizes: Array,
-  },
-
-  mounted() {
-    const checkedElem = this.$el.querySelector('input[value="normal"]');
-    checkedElem.checked = true;
-
-    this.$emit("setSize", {
-      value: checkedElem.value,
-      multiplier: this.sizes.find((item) => item.type === checkedElem.value)
-        .multiplier,
-    });
+    sizes: {
+      type: Array,
+      required: true,
+    },
   },
 
   methods: {
