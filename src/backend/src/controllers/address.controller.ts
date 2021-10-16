@@ -21,14 +21,14 @@ import {
 import {Address} from '../models';
 import {AddressRepository} from '../repositories';
 import {authenticate} from '@loopback/authentication';
-
+​
 @authenticate('jwt')
 export class AddressController {
   constructor(
     @repository(AddressRepository)
     public addressRepository : AddressRepository,
   ) {}
-
+​
   @post('/addresses')
   @response(200, {
     description: 'Address model instance',
@@ -55,7 +55,7 @@ export class AddressController {
   ): Promise<Address> {
     return this.addressRepository.create(address);
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @get('/addresses/count')
   @response(200, {
@@ -67,7 +67,7 @@ export class AddressController {
   ): Promise<Count> {
     return this.addressRepository.count(where);
   }
-
+​
   @get('/addresses')
   @response(200, {
     description: 'Array of Address model instances',
@@ -81,9 +81,10 @@ export class AddressController {
     },
   })
   async find(): Promise<Address[]> {
-    return this.addressRepository.find();
+    const addresses = await this.addressRepository.find();
+    return addresses.filter(address => !!address.userId);
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @patch('/addresses')
   @response(200, {
@@ -103,7 +104,7 @@ export class AddressController {
   ): Promise<Count> {
     return this.addressRepository.updateAll(address, where);
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @get('/addresses/{id}')
   @response(200, {
@@ -120,7 +121,7 @@ export class AddressController {
   ): Promise<Address> {
     return this.addressRepository.findById(id, filter);
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @patch('/addresses/{id}')
   @response(204, {
@@ -139,7 +140,7 @@ export class AddressController {
   ): Promise<void> {
     await this.addressRepository.updateById(id, address);
   }
-
+​
   @put('/addresses/{id}')
   @response(204, {
     description: 'Address PUT success',
@@ -166,7 +167,7 @@ export class AddressController {
   ): Promise<void> {
     await this.addressRepository.replaceById(id, address);
   }
-
+​
   @del('/addresses/{id}')
   @response(204, {
     description: 'Address DELETE success',

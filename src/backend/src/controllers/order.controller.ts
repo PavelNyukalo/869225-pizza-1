@@ -1,7 +1,6 @@
 import {
   Count,
   CountSchema,
-  Filter,
   FilterExcludingWhere,
   repository,
   Where,
@@ -26,7 +25,7 @@ import {
   PizzaRepository
 } from '../repositories';
 import {authenticate} from "@loopback/authentication";
-
+​
 export class OrderController {
   constructor(
     @repository(AddressRepository)
@@ -40,7 +39,7 @@ export class OrderController {
     @repository(PizzaRepository)
     public pizzaRepository : PizzaRepository,
   ) {}
-
+​
   @post('/orders')
   @response(201, {
     description: 'Order model instance',
@@ -59,6 +58,13 @@ export class OrderController {
           schema: {
             example: {
               "userId": "string",
+              "phone": "+7 999-999-99-99",
+              "address": {
+                "street": "string",
+                "building": "string",
+                "flat": "string",
+                "comment": "string"
+              },
               "pizzas": [
                 {
                   "name": "string",
@@ -80,13 +86,6 @@ export class OrderController {
                   "quantity": 0
                 }
               ],
-              "address": {
-                "name": "string",
-                "street": "string",
-                "building": "string",
-                "flat": "string",
-                "comment": "string"
-              },
             }
           }
         },
@@ -100,7 +99,8 @@ export class OrderController {
     let addressId = address?.id;
     // if it is a new address
     if (address && !addressId) {
-      const newAddress = await this.addressRepository.create({...address, userId});
+      const name = `ул.${address.street}, д.${address.building}, кв.${address.flat}`;
+      const newAddress = await this.addressRepository.create({...address, name, userId});
       addressId = newAddress.id;
     }
     const newOrder = await this.orderRepository.create({...orderToSave, addressId});
@@ -125,7 +125,7 @@ export class OrderController {
     }
     return newOrder;
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @authenticate('jwt')
   @get('/orders/count')
@@ -138,7 +138,7 @@ export class OrderController {
   ): Promise<Count> {
     return this.orderRepository.count(where);
   }
-
+​
   @authenticate('jwt')
   @get('/orders')
   @response(200, {
@@ -218,7 +218,7 @@ export class OrderController {
     const orders = await this.orderRepository.find(filter);
     return orders.filter(order => !!order.userId);
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @authenticate('jwt')
   @patch('/orders')
@@ -239,7 +239,7 @@ export class OrderController {
   ): Promise<Count> {
     return this.orderRepository.updateAll(order, where);
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @authenticate('jwt')
   @get('/orders/{id}')
@@ -257,7 +257,7 @@ export class OrderController {
   ): Promise<Order> {
     return this.orderRepository.findById(id, filter);
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @authenticate('jwt')
   @patch('/orders/{id}')
@@ -277,7 +277,7 @@ export class OrderController {
   ): Promise<void> {
     await this.orderRepository.updateById(id, order);
   }
-
+​
   @oas.visibility(OperationVisibility.UNDOCUMENTED)
   @authenticate('jwt')
   @put('/orders/{id}')
@@ -290,7 +290,7 @@ export class OrderController {
   ): Promise<void> {
     await this.orderRepository.replaceById(id, order);
   }
-
+​
   @authenticate('jwt')
   @del('/orders/{id}')
   @response(204, {

@@ -97,3 +97,16 @@ export const INGREDIENTS_TYPES = [
     value: "blue_cheese",
   },
 ];
+
+export const COUNT_INGREDIENT = {
+  Empty: 0,
+  Min: 1,
+  Two: 2,
+  Max: 3,
+};
+
+export const DEFAULT_CHECKED_TYPE = {
+  Dough: "light",
+  Size: "normal",
+  Sauce: "tomato",
+};
