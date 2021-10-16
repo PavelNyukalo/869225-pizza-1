@@ -1,86 +1,82 @@
 <template>
-  <div>
-    <AppLayout :priceBasket="priceBasket" />
-    <main class="content">
-      <form action="#" method="post">
-        <div class="content__wrapper">
-          <h1 class="title title--big">Конструктор пиццы</h1>
+  <main class="content">
+    <form action="#" method="post">
+      <div class="content__wrapper">
+        <h1 class="title title--big">Конструктор пиццы</h1>
 
-          <div class="content__dough">
-            <div class="sheet">
-              <h2 class="title title--small sheet__title">Выберите тесто</h2>
+        <div class="content__dough">
+          <div class="sheet">
+            <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
-              <BuilderDoughSelector
-                class="sheet__content"
-                :dough="dough"
-                @setDough="setDough"
-              />
-            </div>
-          </div>
-
-          <div class="content__diameter">
-            <div class="sheet">
-              <h2 class="title title--small sheet__title">Выберите размер</h2>
-
-              <BuilderSizeSelector
-                class="sheet__content"
-                :sizes="sizes"
-                @setSize="setSize"
-              />
-            </div>
-          </div>
-
-          <div class="content__ingredients">
-            <div class="sheet">
-              <h2 class="title title--small sheet__title">
-                Выберите ингредиенты
-              </h2>
-
-              <BuilderIngredientsSelector
-                class="sheet__content"
-                :sauces="sauces"
-                :ingredients="ingredients"
-                @setSauce="setSauce"
-                @addIngType="addIngType"
-                @removeIngType="removeIngType"
-              />
-            </div>
-          </div>
-
-          <div class="content__pizza">
-            <label class="input">
-              <span class="visually-hidden">Название пиццы</span>
-              <input
-                v-model="pizzaName"
-                type="text"
-                name="pizza_name"
-                placeholder="Введите название пиццы"
-                required
-                autocomplete="off"
-              />
-            </label>
-
-            <BuilderPizzaView
-              :pizzaDough="pizzaDough.value"
-              :pizzaSauce="pizzaSauce.value"
-              :ingredients="ingredients"
-              @changeIngredientsDrop="changeIngredientsDrop"
-            />
-
-            <BuilderPriceCounter
-              :finalPrice="finalPrice"
-              :pizzaObjectInBasket="pizzaObjectInBasket"
-              @addPizzaInBasket="addPizzaInBasket"
+            <BuilderDoughSelector
+              class="sheet__content"
+              :dough="dough"
+              @setDough="setDough"
             />
           </div>
         </div>
-      </form>
-    </main>
-  </div>
+
+        <div class="content__diameter">
+          <div class="sheet">
+            <h2 class="title title--small sheet__title">Выберите размер</h2>
+
+            <BuilderSizeSelector
+              class="sheet__content"
+              :sizes="sizes"
+              @setSize="setSize"
+            />
+          </div>
+        </div>
+
+        <div class="content__ingredients">
+          <div class="sheet">
+            <h2 class="title title--small sheet__title">
+              Выберите ингредиенты
+            </h2>
+
+            <BuilderIngredientsSelector
+              class="sheet__content"
+              :sauces="sauces"
+              :ingredients="ingredients"
+              @setSauce="setSauce"
+              @addIngType="addIngType"
+              @removeIngType="removeIngType"
+            />
+          </div>
+        </div>
+
+        <div class="content__pizza">
+          <label class="input">
+            <span class="visually-hidden">Название пиццы</span>
+            <input
+              v-model="pizzaName"
+              type="text"
+              name="pizza_name"
+              placeholder="Введите название пиццы"
+              required
+              autocomplete="off"
+            />
+          </label>
+
+          <BuilderPizzaView
+            :pizzaDough="pizzaDough.value"
+            :pizzaSauce="pizzaSauce.value"
+            :ingredients="ingredients"
+            @changeIngredientsDrop="changeIngredientsDrop"
+          />
+
+          <BuilderPriceCounter
+            :finalPrice="finalPrice"
+            :pizzaObjectInBasket="pizzaObjectInBasket"
+            @addPizzaInBasket="addPizzaInBasket"
+          />
+        </div>
+      </div>
+    </form>
+  </main>
 </template>
 
 <script>
-import AppLayout from "@/layouts/AppLayout.vue";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector.vue";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector.vue";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector.vue";
@@ -156,7 +152,6 @@ export default {
   name: "IndexHome",
 
   components: {
-    AppLayout,
     BuilderDoughSelector,
     BuilderSizeSelector,
     BuilderIngredientsSelector,
@@ -236,6 +231,8 @@ export default {
 
     addPizzaInBasket() {
       this.priceBasket += this.finalPrice;
+
+      this.$emit("changePriceBasket", this.priceBasket);
 
       this.resetSelect();
     },
