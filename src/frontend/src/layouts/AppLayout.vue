@@ -1,47 +1,26 @@
 <template>
-  <div>
-    <header class="header">
-      <div class="header__logo">
-        <router-link to="/" class="logo">
-          <img :src="LogoIcon" alt="V!U!E! Pizza logo" width="90" height="40" />
-        </router-link>
-      </div>
-      <div class="header__cart">
-        <router-link to="/cart">{{ priceBasket }} ₽</router-link>
-      </div>
-      <div class="header__user">
-        <router-link to="login" class="header__login">
-          <span>Войти</span>
-        </router-link>
-      </div>
-    </header>
-
-    <component :is="layout" @changePriceBasket="priceBasket = $event">
-      <slot />
-    </component>
-  </div>
+  <component :is="layout" :priceBasket="priceBasket">
+    <slot />
+  </component>
 </template>
 
 <script>
-/** Картинки */
-import LogoIcon from "@/assets/img/logo.svg";
-
-const defaultLayout = "Index";
+const defaultLayout = "AppLayoutDefault";
 
 export default {
   name: "AppLayout",
 
-  data() {
-    return {
-      LogoIcon,
-      priceBasket: 0,
-    };
+  props: {
+    priceBasket: {
+      type: Number,
+      required: true,
+    },
   },
 
   computed: {
     layout() {
       const layout = this.$route.meta.layout || defaultLayout;
-      return () => import(`@/views/${layout}.vue`);
+      return () => import(`@/layouts/${layout}.vue`);
     },
   },
 };

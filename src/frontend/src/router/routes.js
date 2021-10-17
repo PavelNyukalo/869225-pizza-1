@@ -9,13 +9,13 @@ export default [
     path: "/",
     name: "IndexHome",
     component: Index,
-    meta: { layout: "Index" },
+    meta: { layout: "AppLayoutDefault" },
     children: [
       {
-        path: "login",
+        path: "/login",
         name: "LoginView",
         component: Login,
-        meta: { layout: "Login" },
+        meta: { layout: "AppLayoutDefault" },
       },
     ],
   },
@@ -23,18 +23,18 @@ export default [
     path: "/orders",
     name: "OrdersView",
     component: Orders,
-    meta: { layout: "Orders" },
+    meta: { layout: "AppLayoutDefault" },
   },
   {
     path: "/cart",
     name: "CartView",
     component: Cart,
-    meta: { layout: "Cart" },
+    meta: { layout: "AppLayoutDefault" },
   },
   {
     path: "/profile",
     name: "ProfileView",
     component: Profile,
-    meta: { layout: "Profile" },
+    meta: { layout: "AppLayoutWithSidebar" },
   },
 ];

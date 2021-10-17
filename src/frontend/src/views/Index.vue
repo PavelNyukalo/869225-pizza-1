@@ -73,6 +73,8 @@
         </div>
       </div>
     </form>
+
+    <router-view />
   </main>
 </template>
 
