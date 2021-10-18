@@ -1,15 +1,25 @@
 <template>
   <div id="app">
-    <IndexHome />
+    <AppLayout :priceBasket="priceBasket">
+      <!-- Временное решение до подключения Vuex -->
+      <router-view @changePriceBasket="priceBasket = $event" />
+    </AppLayout>
   </div>
 </template>
+
 <script>
-import IndexHome from "@/views/Index.vue";
+import AppLayout from "@/layouts/AppLayout.vue";
 
 export default {
   name: "App",
   components: {
-    IndexHome,
+    AppLayout,
+  },
+
+  data() {
+    return {
+      priceBasket: 0,
+    };
   },
 };
 </script>
