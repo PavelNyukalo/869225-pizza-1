@@ -4,7 +4,7 @@
       type="button"
       class="counter__button counter__button--disabled counter__button--minus"
       @click="countRemove"
-      :disabled="count === COUNT_INGREDIENT.Empty"
+      :disabled="condMinusDissabled"
     >
       <span class="visually-hidden">Меньше</span>
     </button>
@@ -19,7 +19,7 @@
       type="button"
       class="counter__button counter__button--plus"
       @click="countAdd"
-      :disabled="count === COUNT_INGREDIENT.Max"
+      :disabled="condPlusDissabled"
     >
       <span class="visually-hidden">Больше</span>
     </button>
@@ -27,15 +27,21 @@
 </template>
 
 <script>
-import { COUNT_INGREDIENT } from "@/common/constants";
-
 export default {
   name: "ItemCounter",
 
   props: {
     count: {
       type: Number,
-      default: COUNT_INGREDIENT.Empty,
+      required: true,
+    },
+    condMinusDissabled: {
+      type: Boolean,
+      required: true,
+    },
+    condPlusDissabled: {
+      type: Boolean,
+      required: true,
     },
   },
 
@@ -43,22 +49,12 @@ export default {
     prop: "count",
   },
 
-  data() {
-    return {
-      COUNT_INGREDIENT,
-    };
-  },
-
   methods: {
     countAdd() {
-      if (this.count <= COUNT_INGREDIENT.Max) {
-        this.$emit("addCount");
-      }
+      this.$emit("addCount");
     },
     countRemove() {
-      if (this.count >= COUNT_INGREDIENT.Empty) {
-        this.$emit("removeCount");
-      }
+      this.$emit("removeCount");
     },
   },
 };

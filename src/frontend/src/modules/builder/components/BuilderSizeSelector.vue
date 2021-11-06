@@ -15,6 +15,9 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import { BUILDER, Mutations } from "@/store/modules/builder.store";
+
 import RadioButton from "@/common/components/RadioButton";
 
 export default {
@@ -24,19 +27,18 @@ export default {
     RadioButton,
   },
 
-  props: {
-    sizes: {
-      type: Array,
-      required: true,
-    },
+  computed: {
+    ...mapState(BUILDER, {
+      sizes: "sizes",
+    }),
   },
 
   methods: {
+    ...mapMutations(BUILDER, {
+      mutationSize: `${Mutations.SelectSize}`,
+    }),
     setSize(value) {
-      this.$emit("setSize", {
-        value: value,
-        multiplier: this.sizes.find((item) => item.type === value).multiplier,
-      });
+      this.mutationSize(this.sizes.find((item) => item.type === value));
     },
   },
 };

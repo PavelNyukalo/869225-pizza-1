@@ -4,7 +4,7 @@
       <div :class="`pizza ${pizzaFoundation}`">
         <div class="pizza__wrapper">
           <div
-            v-for="{ id, count, type } in ingredientsClasses"
+            v-for="{ id, count, type } in ingredients"
             :key="id"
             :class="[
               'pizza__filling',
@@ -22,31 +22,22 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import { BUILDER, Mutations } from "@/store/modules/builder.store";
+
 import AppDrop from "@/common/components/AppDrop";
 import { COUNT_INGREDIENT } from "@/common/constants";
+
+const Dough = {
+  light: "small",
+  large: "big",
+};
 
 export default {
   name: "BuilderPizzaView",
 
   components: {
     AppDrop,
-  },
-
-  props: {
-    pizzaDough: {
-      type: String,
-      required: true,
-    },
-
-    pizzaSauce: {
-      type: String,
-      required: true,
-    },
-
-    ingredients: {
-      type: Array,
-      required: true,
-    },
   },
 
   data() {
@@ -56,17 +47,24 @@ export default {
   },
 
   computed: {
-    ingredientsClasses() {
-      return this.ingredients.filter((ingredient) => ingredient.count > 0);
-    },
+    ...mapState(BUILDER, {
+      dough: (state) => Dough[state.selectedPizza.dough.type],
+      sauce: (state) => state.selectedPizza.sauce.type,
+      ingredients: (state) => state.selectedPizza.ingredients,
+    }),
+
     pizzaFoundation() {
-      return `pizza--foundation--${this.$props.pizzaDough}-${this.$props.pizzaSauce}`;
+      return `pizza--foundation--${this.dough}-${this.sauce}`;
     },
   },
 
   methods: {
+    ...mapMutations(BUILDER, {
+      addIngredientMutation: `${Mutations.AddIngredient}`,
+    }),
+
     addDrop(transferData) {
-      this.$emit("changeIngredientsDrop", transferData);
+      this.addIngredientMutation(transferData.type);
     },
   },
 };

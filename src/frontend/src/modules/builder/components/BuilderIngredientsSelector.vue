@@ -27,8 +27,6 @@
           :name="name"
           :typeIng="type"
           :count="count"
-          @addIngType="addIngType"
-          @removeIngType="removeIngType"
         />
       </ul>
     </div>
@@ -36,6 +34,9 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import { BUILDER, Mutations } from "@/store/modules/builder.store";
+
 import RadioButton from "@/common/components/RadioButton";
 import BuilderIngredientsItem from "@/modules/builder/components/BuilderIngredientsItem";
 
@@ -47,32 +48,20 @@ export default {
     BuilderIngredientsItem,
   },
 
-  props: {
-    sauces: {
-      type: Array,
-      required: true,
-    },
-
-    ingredients: {
-      type: Array,
-      required: true,
-    },
+  computed: {
+    ...mapState(BUILDER, {
+      sauces: "sauces",
+      ingredients: "ingredients",
+    }),
   },
 
   methods: {
+    ...mapMutations(BUILDER, {
+      mutationSauce: `${Mutations.SelectSauce}`,
+    }),
+
     setSauce(value) {
-      this.$emit("setSauce", {
-        value: value,
-        price: this.sauces.find((item) => item.type === value).price,
-      });
-    },
-
-    addIngType(value) {
-      this.$emit("addIngType", value);
-    },
-
-    removeIngType(value) {
-      this.$emit("removeIngType", value);
+      this.mutationSauce(this.sauces.find((item) => item.type === value));
     },
   },
 };

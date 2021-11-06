@@ -13,28 +13,29 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapGetters } from "vuex";
+import { BUILDER, Mutations, Getters } from "@/store/modules/builder.store";
+
 export default {
   name: "BuilderPriceCounter",
 
-  props: {
-    finalPrice: {
-      type: Number,
-      required: true,
-    },
-
-    pizzaObjectInBasket: {
-      type: Object,
-      required: true,
-    },
-  },
-
   computed: {
+    ...mapState(BUILDER, {
+      name: (state) => state.selectedPizza.name,
+      ingredients: (state) => state.selectedPizza.ingredients,
+      selectedPizza: "selectedPizza",
+    }),
+
+    ...mapGetters(BUILDER, {
+      finalPrice: Getters.FinalPrice,
+    }),
+
     isIngredients() {
-      return this.$props.pizzaObjectInBasket.ingredients?.length > 0;
+      return this.ingredients?.length > 0;
     },
 
     isName() {
-      return this.$props.pizzaObjectInBasket.name?.length > 0;
+      return this.name?.length > 0;
     },
 
     disabled() {
@@ -43,7 +44,13 @@ export default {
   },
 
   methods: {
+    ...mapMutations(BUILDER, {
+      resetSelectPizza: `${Mutations.ResetSelectPizza}`,
+    }),
+
     addPizzaInBasket() {
+      this.resetSelectPizza();
+      // TODO: Вызывать мутацию модуля корзины
       this.$emit("addPizzaInBasket");
     },
   },

@@ -6,11 +6,22 @@
       </span>
     </AppDrag>
 
-    <ItemCounter v-model="count" @addCount="addIng" @removeCount="removeIng" />
+    <ItemCounter
+      v-model="count"
+      :condMinusDissabled="isMinusDissabled"
+      :condPlusDissabled="isPlusDissabled"
+      @addCount="addIng"
+      @removeCount="removeIng"
+    />
   </li>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+import { BUILDER, Mutations } from "@/store/modules/builder.store";
+
+import { COUNT_INGREDIENT } from "@/common/constants";
+
 import AppDrag from "@/common/components/AppDrag";
 import ItemCounter from "@/common/components/ItemCounter";
 
@@ -39,6 +50,12 @@ export default {
     },
   },
 
+  data() {
+    return {
+      COUNT_INGREDIENT,
+    };
+  },
+
   computed: {
     type() {
       return `filling--${this.$props.typeIng}`;
@@ -46,26 +63,38 @@ export default {
 
     transferData() {
       return {
-        count: this.count,
         type: this.typeIng,
       };
     },
 
     draggable() {
-      return this.count !== 3;
+      return this.count !== COUNT_INGREDIENT.Max;
+    },
+
+    isMinusDissabled() {
+      return this.count === COUNT_INGREDIENT.Empty;
+    },
+
+    isPlusDissabled() {
+      return this.count === COUNT_INGREDIENT.Max;
     },
   },
 
   methods: {
+    ...mapMutations(BUILDER, {
+      addIngredientMutation: `${Mutations.AddIngredient}`,
+      removeIngredientMutation: `${Mutations.RemoveIngredient}`,
+    }),
+
     addIng() {
-      if (this.count <= 3) {
-        this.$emit("addIngType", this.$props.typeIng);
+      if (this.count <= COUNT_INGREDIENT.Max) {
+        this.addIngredientMutation(this.$props.typeIng);
       }
     },
 
     removeIng() {
-      if (this.count >= 0) {
-        this.$emit("removeIngType", this.$props.typeIng);
+      if (this.count >= COUNT_INGREDIENT.Empty) {
+        this.removeIngredientMutation(this.$props.typeIng);
       }
     },
   },
