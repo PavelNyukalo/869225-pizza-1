@@ -49,19 +49,14 @@ export default {
   },
 
   computed: {
-    ...mapState(BUILDER, {
-      sauces: "sauces",
-      ingredients: "ingredients",
-    }),
+    ...mapState(BUILDER, ["sauces", "ingredients"]),
   },
 
   methods: {
-    ...mapMutations(BUILDER, {
-      mutationSauce: `${Mutations.SelectSauce}`,
-    }),
+    ...mapMutations(BUILDER, [`${Mutations.SelectSauce}`]),
 
     setSauce(value) {
-      this.mutationSauce(this.sauces.find((item) => item.type === value));
+      this.selectSauce(this.sauces.find((item) => item.type === value));
     },
   },
 };

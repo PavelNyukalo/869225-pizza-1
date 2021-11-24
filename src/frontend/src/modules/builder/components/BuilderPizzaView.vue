@@ -59,12 +59,10 @@ export default {
   },
 
   methods: {
-    ...mapMutations(BUILDER, {
-      addIngredientMutation: `${Mutations.AddIngredient}`,
-    }),
+    ...mapMutations(BUILDER, [`${Mutations.AddIngredient}`]),
 
     addDrop(transferData) {
-      this.addIngredientMutation(transferData.type);
+      this.addIngredient(transferData.type);
     },
   },
 };

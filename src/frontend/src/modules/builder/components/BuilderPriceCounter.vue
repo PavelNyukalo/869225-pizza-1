@@ -26,9 +26,7 @@ export default {
       selectedPizza: "selectedPizza",
     }),
 
-    ...mapGetters(BUILDER, {
-      finalPrice: Getters.FinalPrice,
-    }),
+    ...mapGetters(BUILDER, [Getters.FinalPrice]),
 
     isIngredients() {
       return this.ingredients?.length > 0;
@@ -44,9 +42,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(BUILDER, {
-      resetSelectPizza: `${Mutations.ResetSelectPizza}`,
-    }),
+    ...mapMutations(BUILDER, [`${Mutations.ResetSelectPizza}`]),
 
     addPizzaInBasket() {
       this.resetSelectPizza();

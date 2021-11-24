@@ -29,17 +29,14 @@ export default {
   },
 
   computed: {
-    ...mapState(BUILDER, {
-      dough: "dough",
-    }),
+    ...mapState(BUILDER, ["dough"]),
   },
 
   methods: {
-    ...mapMutations(BUILDER, {
-      mutationDough: `${Mutations.SelectDough}`,
-    }),
+    ...mapMutations(BUILDER, [`${Mutations.SelectDough}`]),
+
     setDough(value) {
-      this.mutationDough(this.dough.find((item) => item.type === value));
+      this.selectDough(this.dough.find((item) => item.type === value));
     },
   },
 };

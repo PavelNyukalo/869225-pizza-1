@@ -28,17 +28,13 @@ export default {
   },
 
   computed: {
-    ...mapState(BUILDER, {
-      sizes: "sizes",
-    }),
+    ...mapState(BUILDER, ["sizes"]),
   },
 
   methods: {
-    ...mapMutations(BUILDER, {
-      mutationSize: `${Mutations.SelectSize}`,
-    }),
+    ...mapMutations(BUILDER, [`${Mutations.SelectSize}`]),
     setSize(value) {
-      this.mutationSize(this.sizes.find((item) => item.type === value));
+      this.selectSize(this.sizes.find((item) => item.type === value));
     },
   },
 };

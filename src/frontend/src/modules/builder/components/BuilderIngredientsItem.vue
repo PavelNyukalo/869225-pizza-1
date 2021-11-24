@@ -81,20 +81,20 @@ export default {
   },
 
   methods: {
-    ...mapMutations(BUILDER, {
-      addIngredientMutation: `${Mutations.AddIngredient}`,
-      removeIngredientMutation: `${Mutations.RemoveIngredient}`,
-    }),
+    ...mapMutations(BUILDER, [
+      `${Mutations.AddIngredient}`,
+      `${Mutations.RemoveIngredient}`,
+    ]),
 
     addIng() {
       if (this.count <= COUNT_INGREDIENT.Max) {
-        this.addIngredientMutation(this.$props.typeIng);
+        this.addIngredient(this.$props.typeIng);
       }
     },
 
     removeIng() {
       if (this.count >= COUNT_INGREDIENT.Empty) {
-        this.removeIngredientMutation(this.$props.typeIng);
+        this.removeIngredient(this.$props.typeIng);
       }
     },
   },
