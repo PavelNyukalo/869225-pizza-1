@@ -8,8 +8,8 @@
 
     <ItemCounter
       v-model="count"
-      :condMinusDissabled="isMinusDissabled"
-      :condPlusDissabled="isPlusDissabled"
+      :condMinusDisabled="isMinusDisabled"
+      :condPlusDisabled="isPlusDisabled"
       @addCount="addIng"
       @removeCount="removeIng"
     />
@@ -71,11 +71,11 @@ export default {
       return this.count !== COUNT_INGREDIENT.Max;
     },
 
-    isMinusDissabled() {
+    isMinusDisabled() {
       return this.count === COUNT_INGREDIENT.Empty;
     },
 
-    isPlusDissabled() {
+    isPlusDisabled() {
       return this.count === COUNT_INGREDIENT.Max;
     },
   },

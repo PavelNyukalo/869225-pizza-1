@@ -4,7 +4,7 @@
       type="button"
       class="counter__button counter__button--disabled counter__button--minus"
       @click="countRemove"
-      :disabled="condMinusDissabled"
+      :disabled="condMinusDisabled"
     >
       <span class="visually-hidden">Меньше</span>
     </button>
@@ -17,9 +17,15 @@
     />
     <button
       type="button"
-      class="counter__button counter__button--plus"
+      :class="[
+        'counter__button',
+        'counter__button--plus',
+        {
+          'counter__button--orange': isOrangeButton,
+        },
+      ]"
       @click="countAdd"
-      :disabled="condPlusDissabled"
+      :disabled="condPlusDisabled"
     >
       <span class="visually-hidden">Больше</span>
     </button>
@@ -35,13 +41,17 @@ export default {
       type: Number,
       required: true,
     },
-    condMinusDissabled: {
+    condMinusDisabled: {
       type: Boolean,
       required: true,
     },
-    condPlusDissabled: {
+    condPlusDisabled: {
       type: Boolean,
       required: true,
+    },
+    isOrangeButton: {
+      type: Boolean,
+      default: false,
     },
   },
 

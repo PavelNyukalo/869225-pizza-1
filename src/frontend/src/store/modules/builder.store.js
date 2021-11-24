@@ -33,6 +33,7 @@ export const Mutations = {
   SelectSauce: "selectSauce",
   AddIngredient: "addIngredient",
   RemoveIngredient: "removeIngredient",
+  AddPriceAndCount: "addPriceAndCount",
   ResetSelectPizza: "resetSelectPizza",
 };
 
@@ -54,6 +55,8 @@ export default {
       sauce: {},
       ingredients: [],
       size: {},
+      price: 0,
+      count: 0,
     },
   },
   actions: {
@@ -135,9 +138,15 @@ export default {
         ingredient.count--;
       }
     },
+    [Mutations.AddPriceAndCount]: (state, payload) => {
+      state.selectedPizza.price = payload;
+      state.selectedPizza.count++;
+    },
     [Mutations.ResetSelectPizza]: (state) => {
       state.ingredients.forEach((ingredient) => (ingredient.count = 0));
       state.selectedPizza.name = "";
+      state.selectedPizza.price = 0;
+      state.selectedPizza.count = 0;
       state.selectedPizza.ingredients = [];
     },
   },

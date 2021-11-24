@@ -42,9 +42,13 @@ export default {
   },
 
   methods: {
-    ...mapMutations(BUILDER, [`${Mutations.ResetSelectPizza}`]),
+    ...mapMutations(BUILDER, [
+      `${Mutations.AddPriceAndCount}`,
+      `${Mutations.ResetSelectPizza}`,
+    ]),
 
     addPizzaInBasket() {
+      this.AddPriceAndCount(this.finalPrice);
       this.resetSelectPizza();
       // TODO: Вызывать мутацию модуля корзины
       this.$emit("addPizzaInBasket");

@@ -23,10 +23,7 @@ export default new Vuex.Store({
     [ORDERS]: orders,
     [AUTH]: auth,
   },
-  state: {
-    misc: {},
-    user: {},
-  },
+  state: {},
   actions: {},
   mutations: {},
 });
