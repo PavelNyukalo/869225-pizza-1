@@ -1,10 +1,10 @@
 export const CART = "cart";
 
-export const ACTIONS = {};
+export const Actions = {};
 
-export const MUTATIONS = {};
+export const Mutations = {};
 
-export const GETTERS = {};
+export const Getters = {};
 
 export default {
   namespaced: true,
