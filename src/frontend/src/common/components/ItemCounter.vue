@@ -1,5 +1,5 @@
 <template>
-  <div class="counter counter--orange ingredients__counter">
+  <div class="counter counter--orange">
     <button
       type="button"
       class="counter__button counter__button--disabled counter__button--minus"
@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import { COUNT_INGREDIENT } from "@/common/constants";
+
 export default {
   name: "ItemCounter",
 
@@ -41,13 +43,9 @@ export default {
       type: Number,
       required: true,
     },
-    condMinusDisabled: {
-      type: Boolean,
-      required: true,
-    },
     condPlusDisabled: {
       type: Boolean,
-      required: true,
+      default: false,
     },
     isOrangeButton: {
       type: Boolean,
@@ -57,6 +55,18 @@ export default {
 
   model: {
     prop: "count",
+  },
+
+  data() {
+    return {
+      COUNT_INGREDIENT,
+    };
+  },
+
+  computed: {
+    condMinusDisabled() {
+      return this.count === COUNT_INGREDIENT.Empty;
+    },
   },
 
   methods: {

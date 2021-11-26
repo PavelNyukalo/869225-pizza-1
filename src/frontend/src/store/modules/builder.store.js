@@ -4,7 +4,7 @@ import pizza from "@/static/pizza.json";
 /** Вспомогательные функции */
 import {
   normalizeData,
-  addCountIngredients,
+  addCount,
   addDefaultChecked,
 } from "@/common/helpers.js";
 
@@ -74,7 +74,7 @@ export default {
 
       state.ingredients = payload.ingredients
         .map((ingredient) => normalizeData(ingredient, INGREDIENTS_TYPES))
-        .map((ingredient) => addCountIngredients(ingredient));
+        .map((ingredient) => addCount(ingredient));
       state.selectedPizza.ingredients = state.ingredients.filter(
         (ingredient) => ingredient.count > COUNT_INGREDIENT.Empty
       );
@@ -127,7 +127,7 @@ export default {
         (ingredient) => ingredient.type === payload
       );
 
-      if (ingredient.count === COUNT_INGREDIENT.Min) {
+      if (ingredient.count === COUNT_INGREDIENT.One) {
         ingredient.count--;
 
         const indexOfIngredient =

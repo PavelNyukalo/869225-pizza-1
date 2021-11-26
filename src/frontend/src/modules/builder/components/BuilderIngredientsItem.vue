@@ -7,8 +7,8 @@
     </AppDrag>
 
     <ItemCounter
+      class="ingredients__counter"
       v-model="count"
-      :condMinusDisabled="isMinusDisabled"
       :condPlusDisabled="isPlusDisabled"
       @addCount="addIng"
       @removeCount="removeIng"
@@ -21,7 +21,6 @@ import { mapMutations } from "vuex";
 import { BUILDER, Mutations } from "@/store/modules/builder.store";
 
 import { COUNT_INGREDIENT } from "@/common/constants";
-
 import AppDrag from "@/common/components/AppDrag";
 import ItemCounter from "@/common/components/ItemCounter";
 
@@ -71,10 +70,6 @@ export default {
       return this.count !== COUNT_INGREDIENT.Max;
     },
 
-    isMinusDisabled() {
-      return this.count === COUNT_INGREDIENT.Empty;
-    },
-
     isPlusDisabled() {
       return this.count === COUNT_INGREDIENT.Max;
     },
@@ -87,15 +82,11 @@ export default {
     ]),
 
     addIng() {
-      if (this.count <= COUNT_INGREDIENT.Max) {
-        this.addIngredient(this.$props.typeIng);
-      }
+      this.addIngredient(this.$props.typeIng);
     },
 
     removeIng() {
-      if (this.count >= COUNT_INGREDIENT.Empty) {
-        this.removeIngredient(this.$props.typeIng);
-      }
+      this.removeIngredient(this.$props.typeIng);
     },
   },
 };
