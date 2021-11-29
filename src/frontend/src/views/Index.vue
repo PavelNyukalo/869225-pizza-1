@@ -31,17 +31,15 @@
         </div>
 
         <div class="content__pizza">
-          <label class="input">
-            <span class="visually-hidden">Название пиццы</span>
-            <input
-              v-model="pizzaName"
-              type="text"
-              name="pizza_name"
-              placeholder="Введите название пиццы"
-              required
-              autocomplete="off"
-            />
-          </label>
+          <AppInput
+            v-model="pizzaName"
+            label="Название пиццы"
+            :visuallyHidden="true"
+            name="pizza_name"
+            placeholder="Введите название пиццы"
+            :required="true"
+            autocomplete="off"
+          />
 
           <BuilderPizzaView />
 
@@ -57,7 +55,9 @@
 <script>
 import { mapState } from "vuex";
 import { BUILDER, Actions, Mutations } from "@/store/modules/builder.store";
+import { CART } from "@/store/modules/cart.store";
 
+import AppInput from "@/common/components/AppInput.vue";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector.vue";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector.vue";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector.vue";
@@ -68,6 +68,7 @@ export default {
   name: "IndexHome",
 
   components: {
+    AppInput,
     BuilderDoughSelector,
     BuilderSizeSelector,
     BuilderIngredientsSelector,
@@ -76,13 +77,26 @@ export default {
   },
 
   beforeMount() {
-    this.$store.dispatch(`${BUILDER}/${Actions.CreatePizza}`);
+    const pizzaFromCart = this.selectedProducts[this.$route.params.indexPizza];
+
+    this.$route.params.indexPizza !== undefined
+      ? this.$store.commit(
+          `${BUILDER}/${Mutations.SetPizzaFromCart}`,
+          pizzaFromCart
+        )
+      : this.$store.dispatch(`${BUILDER}/${Actions.CreatePizza}`);
+  },
+
+  mounted() {
+    console.log(this.$route);
   },
 
   computed: {
     ...mapState(BUILDER, {
       name: (state) => state.selectedPizza.name,
     }),
+
+    ...mapState(CART, ["selectedProducts"]),
 
     pizzaName: {
       get() {

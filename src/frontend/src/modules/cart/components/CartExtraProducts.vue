@@ -2,7 +2,7 @@
   <ul class="additional-list">
     <CartExtraProductItem
       v-for="(product, i) in extraProduct"
-      :key="i"
+      :key="i + 1"
       :product="product"
     />
   </ul>

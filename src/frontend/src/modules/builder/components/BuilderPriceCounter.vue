@@ -4,7 +4,7 @@
     <button
       type="button"
       class="button"
-      :disabled="disabled || !isName"
+      :disabled="disabled"
       @click="addPizzaInBasket"
     >
       Готовьте!
@@ -15,6 +15,7 @@
 <script>
 import { mapState, mapMutations, mapGetters } from "vuex";
 import { BUILDER, Mutations, Getters } from "@/store/modules/builder.store";
+import { CART, Mutations as CartMutations } from "@/store/modules/cart.store";
 
 export default {
   name: "BuilderPriceCounter",
@@ -37,21 +38,19 @@ export default {
     },
 
     disabled() {
-      return !this.isIngredients && !this.isName;
+      return !this.isIngredients || !this.isName;
     },
   },
 
   methods: {
-    ...mapMutations(BUILDER, [
-      `${Mutations.AddPriceAndCount}`,
-      `${Mutations.ResetSelectPizza}`,
-    ]),
+    ...mapMutations(BUILDER, [`${Mutations.AddPriceAndCount}`]),
+
+    ...mapMutations(CART, [`${CartMutations.AddPizzaInCart}`]),
 
     addPizzaInBasket() {
-      this.AddPriceAndCount(this.finalPrice);
-      this.resetSelectPizza();
-      // TODO: Вызывать мутацию модуля корзины
-      this.$emit("addPizzaInBasket");
+      this.addPriceAndCount(this.finalPrice);
+      const assignSelectedPizza = Object.assign({}, this.selectedPizza);
+      this.addPizzaInCart(assignSelectedPizza);
     },
   },
 };

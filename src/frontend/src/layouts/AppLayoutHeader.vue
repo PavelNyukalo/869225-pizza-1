@@ -11,11 +11,7 @@
       </router-link>
     </div>
     <div class="header__cart">
-      <!-- TODO: Добавить из VUEX -->
-      <router-link to="/cart">
-        <!-- {{ priceBasket }} -->
-        10 ₽
-      </router-link>
+      <router-link to="/cart"> {{ fullCartPrice }} ₽ </router-link>
     </div>
     <div class="header__user">
       <router-link to="/login" class="header__login">
@@ -26,7 +22,14 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { CART, Getters } from "@/store/modules/cart.store";
+
 export default {
   name: "AppLayoutHeader",
+
+  computed: {
+    ...mapGetters(CART, [`${Getters.FullCartPrice}`]),
+  },
 };
 </script>
