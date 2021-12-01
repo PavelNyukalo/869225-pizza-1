@@ -1,3 +1,5 @@
+import cloneDeep from "lodash.clonedeep";
+
 /** Моки-данные */
 import pizza from "@/static/pizza.json";
 
@@ -21,6 +23,10 @@ import { COUNT_INGREDIENT } from "@/common/constants";
 
 export const BUILDER = "builder";
 
+const changeDefaultChecked = (stateArray, payloadType) => {
+  stateArray.map((item) => (item.defaultChecked = item.type === payloadType));
+};
+
 export const Actions = {
   CreatePizza: "createPizza",
 };
@@ -34,7 +40,8 @@ export const Mutations = {
   AddIngredient: "addIngredient",
   RemoveIngredient: "removeIngredient",
   AddPriceAndCount: "addPriceAndCount",
-  ResetSelectPizza: "resetSelectPizza",
+  ResetPizza: "resetPizza",
+  SetPizzaFromCart: "setPizzaFromCart",
 };
 
 export const Getters = {
@@ -97,15 +104,19 @@ export default {
     [Mutations.UpdatePizzaName]: (state, payload) => {
       state.selectedPizza.name = payload;
     },
+
     [Mutations.SelectDough]: (state, payload) => {
       state.selectedPizza.dough = payload;
     },
+
     [Mutations.SelectSize]: (state, payload) => {
       state.selectedPizza.size = payload;
     },
+
     [Mutations.SelectSauce]: (state, payload) => {
       state.selectedPizza.sauce = payload;
     },
+
     [Mutations.AddIngredient]: (state, payload) => {
       const alreadyAddedIngredient = state.selectedPizza.ingredients.find(
         (ingredient) => ingredient.type === payload
@@ -122,6 +133,7 @@ export default {
         ).count++;
       }
     },
+
     [Mutations.RemoveIngredient]: (state, payload) => {
       const ingredient = state.selectedPizza.ingredients.find(
         (ingredient) => ingredient.type === payload
@@ -138,16 +150,38 @@ export default {
         ingredient.count--;
       }
     },
+
     [Mutations.AddPriceAndCount]: (state, payload) => {
       state.selectedPizza.price = payload;
-      state.selectedPizza.count++;
     },
-    [Mutations.ResetSelectPizza]: (state) => {
-      state.ingredients.forEach((ingredient) => (ingredient.count = 0));
+
+    [Mutations.ResetPizza]: (state) => {
       state.selectedPizza.name = "";
-      state.selectedPizza.price = 0;
-      state.selectedPizza.count = 0;
       state.selectedPizza.ingredients = [];
+      state.ingredients.forEach((ingredient) => {
+        ingredient.count = 0;
+      });
+    },
+
+    [Mutations.SetPizzaFromCart]: (state, payload) => {
+      const assignSelectedPizza = cloneDeep(payload);
+      state.selectedPizza = assignSelectedPizza;
+
+      changeDefaultChecked(state.dough, payload.dough.type);
+      changeDefaultChecked(state.sauces, payload.sauce.type);
+      changeDefaultChecked(state.sizes, payload.size.type);
+
+      state.ingredients = state.ingredients.map((ingredient) => {
+        const selectedIngredient = payload.ingredients.find(
+          (item) => ingredient.type === item.type
+        );
+
+        if (selectedIngredient) {
+          return selectedIngredient;
+        }
+
+        return ingredient;
+      });
     },
   },
   getters: {

@@ -43,7 +43,7 @@
 
           <BuilderPizzaView />
 
-          <BuilderPriceCounter />
+          <BuilderPriceCounter :withRouteParams="withRouteParams" />
         </div>
       </div>
     </form>
@@ -77,14 +77,17 @@ export default {
   },
 
   beforeMount() {
-    const pizzaFromCart = this.selectedProducts[this.$route.params.indexPizza];
+    if (this.withRouteParams) {
+      const pizzaFromCart =
+        this.cartSelectedProduct[this.$route.params.indexPizza];
 
-    this.$route.params.indexPizza !== undefined
-      ? this.$store.commit(
-          `${BUILDER}/${Mutations.SetPizzaFromCart}`,
-          pizzaFromCart
-        )
-      : this.$store.dispatch(`${BUILDER}/${Actions.CreatePizza}`);
+      this.$store.commit(
+        `${BUILDER}/${Mutations.SetPizzaFromCart}`,
+        pizzaFromCart
+      );
+    } else {
+      this.$store.dispatch(`${BUILDER}/${Actions.CreatePizza}`);
+    }
   },
 
   mounted() {
@@ -96,7 +99,7 @@ export default {
       name: (state) => state.selectedPizza.name,
     }),
 
-    ...mapState(CART, ["selectedProducts"]),
+    ...mapState(CART, { cartSelectedProduct: "selectedProducts" }),
 
     pizzaName: {
       get() {
@@ -105,6 +108,10 @@ export default {
       set(value) {
         this.$store.commit(`${BUILDER}/${Mutations.UpdatePizzaName}`, value);
       },
+    },
+
+    withRouteParams() {
+      return this.$route.params.indexPizza !== undefined;
     },
   },
 };

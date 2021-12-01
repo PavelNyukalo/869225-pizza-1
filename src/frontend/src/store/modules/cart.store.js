@@ -12,13 +12,13 @@ export const CART = "cart";
 export const Actions = {};
 
 export const Mutations = {
-  SetMisc: "setMisc",
   AddExtraProduct: "addExtraProduct",
   RemoveExtraProduct: "removeExtraProduct",
   AddPizzaInCart: "addPizzaInCart",
   AddPizza: "addPizza",
   RemovePizza: "removePizza",
   DeletePizza: "deletePizza",
+  UpdatePizza: "updatePizza",
 };
 
 export const Getters = {
@@ -52,13 +52,6 @@ export default {
   },
   actions: {},
   mutations: {
-    [Mutations.SetMisc]: (state, payload) => {
-      state.extraProduct = payload
-        .map((item) => normalizeData(item, EXTRA_PRODUCTS_TYPES))
-        .map((item) => addCount(item))
-        .map((item) => addFullPrice(item));
-    },
-
     [Mutations.AddExtraProduct]: (state, payload) => {
       const product = state.extraProduct.find(
         (product) => product.type === payload
@@ -91,6 +84,11 @@ export default {
 
     [Mutations.DeletePizza]: (state, payload) => {
       state.selectedProducts.splice(payload, 1);
+    },
+
+    [Mutations.UpdatePizza]: (state, payload) => {
+      state.selectedProducts[payload.index] = payload.item;
+      // TODO: Добавить обновление финальной цены
     },
   },
 
