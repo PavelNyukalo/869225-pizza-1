@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    <AppLayout :priceBasket="priceBasket">
-      <!-- Временное решение до подключения Vuex -->
-      <router-view @changePriceBasket="priceBasket = $event" />
+    <AppLayout>
+      <router-view />
     </AppLayout>
   </div>
 </template>
@@ -14,12 +13,6 @@ export default {
   name: "App",
   components: {
     AppLayout,
-  },
-
-  data() {
-    return {
-      priceBasket: 0,
-    };
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
-  <component :is="layout" :priceBasket="priceBasket">
-    <slot />
+  <component :is="layout">
+    <slot></slot>
   </component>
 </template>
 
@@ -9,13 +9,6 @@ const defaultLayout = "AppLayoutDefault";
 
 export default {
   name: "AppLayout",
-
-  props: {
-    priceBasket: {
-      type: Number,
-      required: true,
-    },
-  },
 
   computed: {
     layout() {

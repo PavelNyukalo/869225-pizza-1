@@ -16,6 +16,9 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import { BUILDER, Mutations } from "@/store/modules/builder.store";
+
 import RadioButton from "@/common/components/RadioButton";
 
 export default {
@@ -25,19 +28,15 @@ export default {
     RadioButton,
   },
 
-  props: {
-    dough: {
-      type: Array,
-      required: true,
-    },
+  computed: {
+    ...mapState(BUILDER, ["dough"]),
   },
 
   methods: {
+    ...mapMutations(BUILDER, [`${Mutations.SelectDough}`]),
+
     setDough(value) {
-      this.$emit("setDough", {
-        value: value,
-        price: this.dough.find((item) => item.type === value).price,
-      });
+      this.selectDough(this.dough.find((item) => item.type === value));
     },
   },
 };

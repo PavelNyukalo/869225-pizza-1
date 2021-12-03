@@ -2,11 +2,16 @@
   <header class="header">
     <div class="header__logo">
       <router-link to="/" class="logo">
-        <img :src="logoIcon" alt="V!U!E! Pizza logo" width="90" height="40" />
+        <img
+          :src="require('@/assets/img/logo.svg')"
+          alt="V!U!E! Pizza logo"
+          width="90"
+          height="40"
+        />
       </router-link>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">{{ priceBasket }} ₽</router-link>
+      <router-link to="/cart"> {{ fullCartPrice }} ₽ </router-link>
     </div>
     <div class="header__user">
       <router-link to="/login" class="header__login">
@@ -17,22 +22,14 @@
 </template>
 
 <script>
-import logoIcon from "@/assets/img/logo.svg";
+import { mapGetters } from "vuex";
+import { CART, Getters } from "@/store/modules/cart.store";
 
 export default {
   name: "AppLayoutHeader",
 
-  props: {
-    priceBasket: {
-      type: Number,
-      required: true,
-    },
-  },
-
-  data() {
-    return {
-      logoIcon,
-    };
+  computed: {
+    ...mapGetters(CART, [`${Getters.FullCartPrice}`]),
   },
 };
 </script>

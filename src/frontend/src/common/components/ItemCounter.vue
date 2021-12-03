@@ -1,10 +1,10 @@
 <template>
-  <div class="counter counter--orange ingredients__counter">
+  <div class="counter counter--orange">
     <button
       type="button"
       class="counter__button counter__button--disabled counter__button--minus"
       @click="countRemove"
-      :disabled="count === COUNT_INGREDIENT.Empty"
+      :disabled="condMinusDisabled"
     >
       <span class="visually-hidden">Меньше</span>
     </button>
@@ -17,9 +17,15 @@
     />
     <button
       type="button"
-      class="counter__button counter__button--plus"
+      :class="[
+        'counter__button',
+        'counter__button--plus',
+        {
+          'counter__button--orange': isOrangeButton,
+        },
+      ]"
       @click="countAdd"
-      :disabled="count === COUNT_INGREDIENT.Max"
+      :disabled="condPlusDisabled"
     >
       <span class="visually-hidden">Больше</span>
     </button>
@@ -35,7 +41,15 @@ export default {
   props: {
     count: {
       type: Number,
-      default: COUNT_INGREDIENT.Empty,
+      required: true,
+    },
+    condPlusDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    isOrangeButton: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -49,16 +63,18 @@ export default {
     };
   },
 
+  computed: {
+    condMinusDisabled() {
+      return this.count === COUNT_INGREDIENT.Empty;
+    },
+  },
+
   methods: {
     countAdd() {
-      if (this.count <= COUNT_INGREDIENT.Max) {
-        this.$emit("addCount");
-      }
+      this.$emit("addCount");
     },
     countRemove() {
-      if (this.count >= COUNT_INGREDIENT.Empty) {
-        this.$emit("removeCount");
-      }
+      this.$emit("removeCount");
     },
   },
 };

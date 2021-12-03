@@ -4,47 +4,82 @@
     <button
       type="button"
       class="button"
-      :disabled="disabled || !isName"
+      :disabled="disabled"
       @click="addPizzaInBasket"
     >
-      Готовьте!
+      {{ buttonText }}
     </button>
   </div>
 </template>
 
 <script>
+import cloneDeep from "lodash.clonedeep";
+import { mapState, mapMutations, mapGetters } from "vuex";
+import { BUILDER, Mutations, Getters } from "@/store/modules/builder.store";
+import { CART, Mutations as CartMutations } from "@/store/modules/cart.store";
+
 export default {
   name: "BuilderPriceCounter",
 
   props: {
-    finalPrice: {
-      type: Number,
-      required: true,
-    },
-
-    pizzaObjectInBasket: {
-      type: Object,
+    withRouteParams: {
+      type: Boolean,
       required: true,
     },
   },
 
   computed: {
+    ...mapState(BUILDER, {
+      name: (state) => state.selectedPizza.name,
+      ingredients: (state) => state.selectedPizza.ingredients,
+      selectedPizza: "selectedPizza",
+    }),
+
+    ...mapGetters(BUILDER, [Getters.FinalPrice]),
+
     isIngredients() {
-      return this.$props.pizzaObjectInBasket.ingredients?.length > 0;
+      return this.ingredients?.length > 0;
     },
 
     isName() {
-      return this.$props.pizzaObjectInBasket.name?.length > 0;
+      return this.name?.length > 0;
     },
 
     disabled() {
-      return !this.isIngredients && !this.isName;
+      return !this.isIngredients || !this.isName;
+    },
+
+    buttonText() {
+      return this.$props.withRouteParams ? "Сохранить" : "Готовьте!";
     },
   },
 
   methods: {
+    ...mapMutations(BUILDER, [
+      `${Mutations.AddPriceAndCount}`,
+      `${Mutations.ResetPizza}`,
+    ]),
+
+    ...mapMutations(CART, [
+      `${CartMutations.AddPizzaInCart}`,
+      `${CartMutations.UpdatePizza}`,
+    ]),
+
     addPizzaInBasket() {
-      this.$emit("addPizzaInBasket");
+      this.addPriceAndCount(this.finalPrice);
+      const assignSelectedPizza = cloneDeep(this.selectedPizza);
+
+      if (this.$props.withRouteParams) {
+        assignSelectedPizza.fullPrice =
+          assignSelectedPizza.price * assignSelectedPizza.count;
+        this.updatePizza({
+          index: this.$route.params.indexPizza,
+          item: assignSelectedPizza,
+        });
+      } else {
+        this.addPizzaInCart(assignSelectedPizza);
+        this.resetPizza();
+      }
     },
   },
 };

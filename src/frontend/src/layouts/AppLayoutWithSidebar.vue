@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppLayoutHeader :priceBasket="priceBasket" />
+    <AppLayoutHeader />
     <AppLayoutSidebar />
     <slot />
   </div>
@@ -16,13 +16,6 @@ export default {
   components: {
     AppLayoutHeader,
     AppLayoutSidebar,
-  },
-
-  props: {
-    priceBasket: {
-      type: Number,
-      required: true,
-    },
   },
 };
 </script>

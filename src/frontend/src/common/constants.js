@@ -100,8 +100,9 @@ export const INGREDIENTS_TYPES = [
 
 export const COUNT_INGREDIENT = {
   Empty: 0,
-  Min: 1,
+  One: 1,
   Two: 2,
+  // Применительно к ингредиентам в конструкторе
   Max: 3,
 };
 
@@ -110,3 +111,18 @@ export const DEFAULT_CHECKED_TYPE = {
   Size: "normal",
   Sauce: "tomato",
 };
+
+export const EXTRA_PRODUCTS_TYPES = [
+  {
+    label: "Cola-Cola 0,5 литра",
+    value: "cola",
+  },
+  {
+    label: "Острый соус",
+    value: "sauce",
+  },
+  {
+    label: "Картошка из печи",
+    value: "potato",
+  },
+];
