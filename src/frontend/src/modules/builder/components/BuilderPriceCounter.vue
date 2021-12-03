@@ -70,6 +70,8 @@ export default {
       const assignSelectedPizza = cloneDeep(this.selectedPizza);
 
       if (this.$props.withRouteParams) {
+        assignSelectedPizza.fullPrice =
+          assignSelectedPizza.price * assignSelectedPizza.count;
         this.updatePizza({
           index: this.$route.params.indexPizza,
           item: assignSelectedPizza,

@@ -87,8 +87,7 @@ export default {
     },
 
     [Mutations.UpdatePizza]: (state, payload) => {
-      state.selectedProducts[payload.index] = payload.item;
-      // TODO: Добавить обновление финальной цены
+      state.selectedProducts.splice(payload.index, 1, payload.item);
     },
   },
 

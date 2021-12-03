@@ -23,9 +23,9 @@
         </div>
       </div>
     </main>
-    <CartFooter v-if="!emptyCart" />
+    <CartFooter v-if="!emptyCart" @showModal="isShowModal = true" />
 
-    <AppPopup />
+    <AppPopup v-if="isShowModal" />
   </form>
 </template>
 
@@ -50,9 +50,11 @@ export default {
     AppPopup,
   },
 
-  // beforeMount() {
-  //   this.$store.dispatch(`${CART}/${Actions.LoadMisc}`);
-  // },
+  data() {
+    return {
+      isShowModal: false,
+    };
+  },
 
   computed: {
     ...mapState(CART, ["selectedProducts"]),

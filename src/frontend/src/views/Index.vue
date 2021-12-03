@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { BUILDER, Actions, Mutations } from "@/store/modules/builder.store";
 import { CART } from "@/store/modules/cart.store";
 
@@ -86,6 +86,7 @@ export default {
         pizzaFromCart
       );
     } else {
+      this.resetPizza();
       this.$store.dispatch(`${BUILDER}/${Actions.CreatePizza}`);
     }
   },
@@ -113,6 +114,10 @@ export default {
     withRouteParams() {
       return this.$route.params.indexPizza !== undefined;
     },
+  },
+
+  methods: {
+    ...mapMutations(BUILDER, [`${Mutations.ResetPizza}`]),
   },
 };
 </script>
