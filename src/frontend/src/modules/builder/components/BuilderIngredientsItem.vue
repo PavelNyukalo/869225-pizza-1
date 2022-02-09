@@ -57,7 +57,7 @@ export default {
 
   computed: {
     type() {
-      return `filling--${this.$props.typeIng}`;
+      return `filling--${this.typeIng}`;
     },
 
     transferData() {
@@ -82,11 +82,11 @@ export default {
     ]),
 
     addIng() {
-      this.addIngredient(this.$props.typeIng);
+      this.addIngredient(this.typeIng);
     },
 
     removeIng() {
-      this.removeIngredient(this.$props.typeIng);
+      this.removeIngredient(this.typeIng);
     },
   },
 };

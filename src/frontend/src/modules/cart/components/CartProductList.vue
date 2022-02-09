@@ -2,7 +2,7 @@
   <ul class="cart-list sheet">
     <CartProduct
       v-for="(product, i) in selectedProducts"
-      :key="i"
+      :key="product.name"
       :index="i"
       :selectedProduct="product"
     />

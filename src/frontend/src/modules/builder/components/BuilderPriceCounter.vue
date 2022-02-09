@@ -50,7 +50,7 @@ export default {
     },
 
     buttonText() {
-      return this.$props.withRouteParams ? "Сохранить" : "Готовьте!";
+      return this.withRouteParams ? "Сохранить" : "Готовьте!";
     },
   },
 
@@ -69,7 +69,7 @@ export default {
       this.addPriceAndCount(this.finalPrice);
       const assignSelectedPizza = cloneDeep(this.selectedPizza);
 
-      if (this.$props.withRouteParams) {
+      if (this.withRouteParams) {
         assignSelectedPizza.fullPrice =
           assignSelectedPizza.price * assignSelectedPizza.count;
         this.updatePizza({

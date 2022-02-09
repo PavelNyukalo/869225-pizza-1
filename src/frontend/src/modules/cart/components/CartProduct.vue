@@ -20,7 +20,7 @@
 
     <ItemCounter
       class="cart-list__counter"
-      v-model="selectedProduct.count"
+      :count="selectedProduct.count"
       :isOrangeButton="true"
       @addCount="addCountPizza"
       @removeCount="removeCountPizza"
